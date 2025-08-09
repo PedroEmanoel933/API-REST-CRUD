@@ -6,7 +6,13 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
-    'Pedro\\Api\\' => array($baseDir . '/src'),
-    'Model\\:' => array($baseDir . '/Model'),
-    'Controller\\:' => array($baseDir . '/Controller'),
+    'Slim\\' => array($vendorDir . '/slim/slim/Slim'),
+    'Psr\\Log\\' => array($vendorDir . '/psr/log/src'),
+    'Psr\\Http\\Server\\' => array($vendorDir . '/psr/http-server-middleware/src', $vendorDir . '/psr/http-server-handler/src'),
+    'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-factory/src', $vendorDir . '/psr/http-message/src'),
+    'Psr\\Container\\' => array($vendorDir . '/psr/container/src'),
+    'Pedro\\Api\\' => array($baseDir . '/API'),
+    'Model\\' => array($baseDir . '/Model'),
+    'FastRoute\\' => array($vendorDir . '/nikic/fast-route/src'),
+    'Controller\\' => array($baseDir . '/Controller'),
 );

@@ -1,44 +1,93 @@
 <?php
+
 namespace Controller;
 
 use Model\User;
 
-class UserController{
-    public function getUsers(){
+class UserController
+{
+    // Função para pegar todos os usuários
+    public function getUsers()
+    {
         $user = new User();
         $users = $user->getUsers();
-        
-        if($users){
-            // ENVIA A RESPOSTA EM Json
-            header("Content-type: application/json");
+
+        if ($users) {
+            // Envia a resposta JSON
+            header('Content-Type: application/json', true, 200);
             echo json_encode($users);
-        } else{
-            echo json_encode(['message' => 'Not users found']);
+        } else {
+            header('Content-Type: application/json', true, 404);
+            echo json_encode(["message" => "No users found"]);
         }
     }
 
-    // FUNÇÃO PARA CRIAR UM USUÁRIO
-    public function creatUser(){
-        // OBTÉM OS DADOS DO USUÁRIO, 
-        // A RMAZENANDO OS DADOS QUE VEM DO input/teclado E DECODIFICA DE PHP PARA JSON
-        $data = json_decode(json: file_get_contentes(filename: "php://input"));
-        
-        //VERIFICAR SE A VARIÁVEL NÃO ESTÁ VAZIA
-        if(isset($data->name) && isset($data->email)){
-            $user = new User();
+    // Função para criar um usuário
+    public function createUser()
+    {
+        // Obtém os dados da requisição
+        $data = json_decode(file_get_contents("php://input"));
 
-            // COLOCANDO OQ FOI DIGITADO NO INPUT NA TABELA DO BANCO DE DADOS
+        if (isset($data->name) && isset($data->email)) {
+            $user = new User();
             $user->name = $data->name;
             $user->email = $data->email;
 
-            if($user->createUser()){
-                echo json_decode(["message" => "User created sucessfully"]);
-            } else{
-                echo json_encode(["message"=> "Failed to create user"]);
+            if ($user->createUser()) {
+                header("Content-Type: application/json", true, 201);
+                echo json_encode(["message" => "User created successfully"]);
+            } else {
+                header("Content-Type: application/json", true, 500);
+                echo json_encode(["message" => "Failed to create user"]);
             }
         } else {
-            echo json_encode(["message"=> "Invalid Input"]);
+            header("Content-Type: application/json", true, 400); 
+            echo json_encode(["message" => "Invalid input"]);
+        }
+    }
+
+    // Função para atualiza informações de um usuário
+     public function updateUser(){
+
+        $data = json_decode (file_get_contents("php://input"));
+
+        if(isset($data->id) && isset($data->name) && isset($data->email)){
+            $user = new User();
+            $user->id = $data->id;
+            $user->name = $data->name;
+            $user->email = $data->email;
+
+            if($user->updateUser()){
+                header('content-Type: application/json', true, 200);
+                echo json_encode(["message" => "Usuário atualizado com sucesso!"]);
+            } else {
+                header('content-Type: application/json' , true, 500);
+                echo json_encode(["message" => "Falha ao atualizar usuário"]);
+            }
+        } else {
+            header('content-Type: application/json', true, 400);
+            echo json_encode(["message" => "Informação inválida"]);
+        }
+    }
+
+    // Função para deletar informações de um usuário
+    public function deleteUser(){
+        $id = $_GET['id'] ?? null;
+
+        if($id){
+            $user = new User();
+            $user->id = $id;
+
+            if($user->deleteUser()){
+                header('content-Type: application/json', true, 200);
+                echo json_encode(["message" => "Usuário excluido com sucesso!"]);
+            } else {
+                header('content-Type: application/json' , true, 500);
+                echo json_encode(["message" => "Falha ao excluir usuário"]);
+            }
+        } else {
+            header('content-Type: application/json', true, 400);
+            echo json_encode(["message" => "Id inválido"]);
         }
     }
 }
-?>

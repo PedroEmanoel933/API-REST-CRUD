@@ -1,4 +1,5 @@
 <?php
+// IMPORTAÇÃO DE ARQUIVOS
 require_once __DIR__ . '/vendor/autoload.php';
 
 use Controller\UserController;
@@ -13,11 +14,23 @@ switch ($method) {
         $userController->getUsers();
         break;
     case 'POST':
-        $userController->createUsers();
+        $userController->createUser();
         break;
+
+    case 'PUT':
+        $userController->updateUser();
+        break;
+
+    case 'DELETE':
+        $userController->deleteUser();
+        break;
+
     default:
-        // ENVIA UM TEXTO EM FORMATO json 
-        echo json_encode(['message' => "Method not allowed"]);
+        // FORMATA TEXTO EM JSON
+        echo json_encode(["message" => "Method not allowed"]);
         break;
 }
-?>
+
+// if (empty($usuario)) {
+//     echo "Vazio!";
+// }
